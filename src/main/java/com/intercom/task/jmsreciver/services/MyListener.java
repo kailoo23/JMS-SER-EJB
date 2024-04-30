@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+// test any thing
 @MessageDriven(
         activationConfig = {
                 @ActivationConfigProperty(
