@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN" monitorInterval="30">
+    <properties>
+        <property name="LOG_HOME">./isps_services_log</property>
+        <property name="LOG_PATTERN_CONSOLE">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %highlight{%-5level}{FATAL=red, ERROR=red,
+            WARN=yellow, INFO=green, DEBUG=blue, TRACE=blue} %cyan{%c{1.}} - %m%n
+        </property>
+        <property name="LOG_PATTERN_FILE">%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</property>
+        <property name="MAX_LOG_FILES">20</property>
+        <property name="LOG_FILE_SIZE">10485760</property>
+        <property name="LOG_FILE_AGE">7</property>
+    </properties>
+
+    <appenders>
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN_CONSOLE}"/>
+        </console>
+
+        <RollingFile name="RollingFile" immediateFlush="true" fileName="${LOG_HOME}/app.log"
+                     filePattern="${LOG_HOME}/app_%d{yyyy-MM-dd-HH}-%i.log.zip">
+            <PatternLayout pattern="${LOG_PATTERN_FILE}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${LOG_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_LOG_FILES}">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*.zip"/>
+                    <IfLastModified age="${LOG_FILE_AGE}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="ACCEPT"/>
+        </RollingFile>
+
+        <RollingFile name="ErrorFile" immediateFlush="true" fileName="${LOG_HOME}/error.log"
+                     filePattern="${LOG_HOME}/error_%d{yyyy-MM-dd-HH}-%i.log.zip">
+            <PatternLayout pattern="${LOG_PATTERN_FILE}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${LOG_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_LOG_FILES}">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*.zip"/>
+                    <IfLastModified age="${LOG_FILE_AGE}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingFile>
+    </appenders>
+
+    <loggers>
+        <logger level="INFO" additivity="false">
+            <appender-ref ref="RollingFile"/>
+            <appender-ref ref="ErrorFile"/>
+            <appender-ref ref="Console"/>
+        </logger>
+
+        <root level="ERROR">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFile"/>
+            <appender-ref ref="ErrorFile"/>
+        </root>
+    </loggers>
+</configuration>
