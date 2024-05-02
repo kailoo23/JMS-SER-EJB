@@ -3,4 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
+
+    <context-param>
+        <description>
+            Host HTTP header protection configuration.
+            When enabled, please provide a list of trusted hosts (separated by semicolons).
+            Each host must be a valid regular expression.
+            Example: enableHostsAllowlist=true,hosts=host1.com;*.company.com;localhost:*
+            This parameter is also used for the logout redirect parameter
+            Although it is not recommended, you can add the scheme here like https://ibm.com or a wildcard *ibm.com
+        </description>
+        <param-name>com.ibm.rules.decisioncenter.TRUSTED_HOSTS_CONFIGURATION</param-name>
+        <param-value>enableHostsAllowlist=false,hosts=ibm.com</param-value>
+    </context-param>
 </web-app>
